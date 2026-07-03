@@ -12,7 +12,7 @@ router.post("/",async (req,res)=>{
         const messages=[
             {
                 role:"system",
-                content:message
+                content:Prompt
             },
             ...history,
             {
