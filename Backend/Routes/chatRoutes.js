@@ -8,7 +8,8 @@ const router=Router()
 router.post("/",async (req,res)=>{
     try {
         const{persona,history=[],message}=req.body
-        const Prompt = persona === "hitesh"? hiteshPrompt: piyushPrompt;
+        console.log("Persona:", persona);
+        const Prompt = persona === "Hitesh Choudhary"? hiteshPrompt: piyushPrompt;
         const messages=[
             {
                 role:"system",
