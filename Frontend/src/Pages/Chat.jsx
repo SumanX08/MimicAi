@@ -37,8 +37,10 @@ const Chat = () => {
         content: msg.content,
       }));
 
+      console.log(selectedPersona)
+
       const { data } = await api.post("/chat", {
-        persona: selectedPersona,
+        persona: selectedPersona.name,
         history,
         message: text,
       });
