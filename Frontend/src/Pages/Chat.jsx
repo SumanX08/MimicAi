@@ -14,11 +14,20 @@ const Chat = () => {
   const persona = state?.persona;
 
   const [selectedPersona, setSelectedPersona] = useState(persona);
-  const [messages, setMessages] = useState([]);
+
+  // Separate message history for each persona
+  const [chats, setChats] = useState({
+    hitesh: [],
+    piyush: [],
+  });
+
   const [isTyping, setIsTyping] = useState(false);
 
+  // Current persona messages
+  const messages = chats[selectedPersona.id] || [];
+
   const handleSend = async (text) => {
-    if (!text.trim()) return;
+    if (!text.trim() || isTyping) return;
 
     const userMessage = {
       id: crypto.randomUUID(),
@@ -28,19 +37,24 @@ const Chat = () => {
 
     const updatedMessages = [...messages, userMessage];
 
-    setMessages(updatedMessages);
+    // Add user message only to current persona chat
+    setChats((prev) => ({
+      ...prev,
+      [selectedPersona.id]: updatedMessages,
+    }));
+
     setIsTyping(true);
 
     try {
-      const history = updatedMessages.map((msg) => ({
+      // Send previous conversation as history.
+      // Current message is already sent separately as `message`.
+      const history = messages.map((msg) => ({
         role: msg.role,
         content: msg.content,
       }));
 
-      console.log(selectedPersona)
-
       const { data } = await api.post("/chat", {
-        persona: selectedPersona.name,
+        persona: selectedPersona.id,
         history,
         message: text,
       });
@@ -51,7 +65,14 @@ const Chat = () => {
         content: data.reply,
       };
 
-      setMessages((prev) => [...prev, aiMessage]);
+      // Add AI response to current persona chat
+      setChats((prev) => ({
+        ...prev,
+        [selectedPersona.id]: [
+          ...prev[selectedPersona.id],
+          aiMessage,
+        ],
+      }));
     } catch (error) {
       console.error(error);
 
@@ -61,10 +82,22 @@ const Chat = () => {
         content: "Something went wrong. Please try again.",
       };
 
-      setMessages((prev) => [...prev, errorMessage]);
+      setChats((prev) => ({
+        ...prev,
+        [selectedPersona.id]: [
+          ...prev[selectedPersona.id],
+          errorMessage,
+        ],
+      }));
     } finally {
       setIsTyping(false);
     }
+  };
+
+  const handlePersonaChange = (newPersona) => {
+    if (isTyping) return;
+
+    setSelectedPersona(newPersona);
   };
 
   if (!persona) return null;
@@ -73,7 +106,7 @@ const Chat = () => {
     <div className="relative h-screen bg-[#0B0F19] text-white flex flex-col">
       <ChatHeader
         persona={selectedPersona}
-        onPersonaChange={setSelectedPersona}
+        onPersonaChange={handlePersonaChange}
       />
 
       {messages.length === 0 && !isTyping ? (
