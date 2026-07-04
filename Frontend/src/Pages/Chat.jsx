@@ -54,7 +54,7 @@ const Chat = () => {
       }));
 
       const { data } = await api.post("/chat", {
-        persona: selectedPersona.id,
+        persona: selectedPersona.name,
         history,
         message: text,
       });
@@ -68,8 +68,8 @@ const Chat = () => {
       // Add AI response to current persona chat
       setChats((prev) => ({
         ...prev,
-        [selectedPersona.id]: [
-          ...prev[selectedPersona.id],
+        [selectedPersona.name]: [
+          ...prev[selectedPersona.name],
           aiMessage,
         ],
       }));
@@ -85,7 +85,7 @@ const Chat = () => {
       setChats((prev) => ({
         ...prev,
         [selectedPersona.id]: [
-          ...prev[selectedPersona.id],
+          ...prev[selectedPersona.name],
           errorMessage,
         ],
       }));
