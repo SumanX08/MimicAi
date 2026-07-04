@@ -8,7 +8,7 @@ The project focuses on persona consistency, context-aware conversations, clean p
 
 ## Live Demo
 
-Add your deployed frontend URL here before submission.
+https://mimic-ai-by-suman.vercel.app/
 
 ## Public Repository
 
