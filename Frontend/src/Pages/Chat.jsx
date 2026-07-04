@@ -11,11 +11,11 @@ import EmptyState from "../Components/EmptyState";
 const Chat = () => {
   const { state } = useLocation();
 
-  const persona = state?.persona;
+  const initialPersona = state?.persona;
 
-  const [selectedPersona, setSelectedPersona] = useState(persona);
+  const [selectedPersona, setSelectedPersona] =
+    useState(initialPersona);
 
-  // Separate message history for each persona
   const [chats, setChats] = useState({
     hitesh: [],
     piyush: [],
@@ -23,11 +23,16 @@ const Chat = () => {
 
   const [isTyping, setIsTyping] = useState(false);
 
-  // Current persona messages
-  const messages = chats[selectedPersona.name] || [];
+  if (!selectedPersona) return null;
+
+  const messages = chats[selectedPersona.id] || [];
 
   const handleSend = async (text) => {
     if (!text.trim() || isTyping) return;
+
+    // Capture the persona for this request.
+    // This prevents a response being added to the wrong chat.
+    const currentPersonaId = selectedPersona.id;
 
     const userMessage = {
       id: crypto.randomUUID(),
@@ -35,26 +40,29 @@ const Chat = () => {
       content: text,
     };
 
-    const updatedMessages = [...messages, userMessage];
+    const currentMessages =
+      chats[currentPersonaId] || [];
 
-    // Add user message only to current persona chat
+    const updatedMessages = [
+      ...currentMessages,
+      userMessage,
+    ];
+
     setChats((prev) => ({
       ...prev,
-      [selectedPersona.id]: updatedMessages,
+      [currentPersonaId]: updatedMessages,
     }));
 
     setIsTyping(true);
 
     try {
-      // Send previous conversation as history.
-      // Current message is already sent separately as `message`.
-      const history = messages.map((msg) => ({
+      const history = currentMessages.map((msg) => ({
         role: msg.role,
         content: msg.content,
       }));
 
       const { data } = await api.post("/chat", {
-        persona: selectedPersona.name,
+        persona: currentPersonaId,
         history,
         message: text,
       });
@@ -65,11 +73,10 @@ const Chat = () => {
         content: data.reply,
       };
 
-      // Add AI response to current persona chat
       setChats((prev) => ({
         ...prev,
-        [selectedPersona.name]: [
-          ...prev[selectedPersona.name],
+        [currentPersonaId]: [
+          ...(prev[currentPersonaId] || []),
           aiMessage,
         ],
       }));
@@ -84,8 +91,8 @@ const Chat = () => {
 
       setChats((prev) => ({
         ...prev,
-        [selectedPersona.id]: [
-          ...prev[selectedPersona.name],
+        [currentPersonaId]: [
+          ...(prev[currentPersonaId] || []),
           errorMessage,
         ],
       }));
@@ -99,8 +106,6 @@ const Chat = () => {
 
     setSelectedPersona(newPersona);
   };
-
-  if (!persona) return null;
 
   return (
     <div className="relative h-screen bg-[#0B0F19] text-white flex flex-col">
