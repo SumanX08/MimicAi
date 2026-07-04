@@ -24,7 +24,7 @@ const Chat = () => {
   const [isTyping, setIsTyping] = useState(false);
 
   // Current persona messages
-  const messages = chats[selectedPersona.id] || [];
+  const messages = chats[selectedPersona.name] || [];
 
   const handleSend = async (text) => {
     if (!text.trim() || isTyping) return;
