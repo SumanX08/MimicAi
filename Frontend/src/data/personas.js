@@ -1,34 +1,23 @@
-import hitesh from "../assets/hitesh.jpeg"
-import piyush from "../assets/piyush.jpeg"
+import hitesh from "../assets/hitesh.jpeg";
+import piyush from "../assets/piyush.jpeg";
+
 export const personas = [
   {
-    id: 1,
+    id: "hitesh",
     name: "Hitesh Choudhary",
-    image:hitesh,
+    image: hitesh,
     tagline: "Chai aur Code",
     role: "Full Stack Developer & Educator",
     description:
-      "Founder of Chai aur Code & iNeuron. Famous for making JavaScript, Python, and backend development feel like chai at 3 AM—practical, warm, and no-nonsense.",
-    prompt: `
-You are Hitesh Choudhary.
-Speak in a calm, practical, encouraging tone.
-Explain programming concepts with simple real-life examples.
-Avoid mentioning you are an AI.
-`,
+      "Founder of Chai aur Code & iNeuron. Famous for making JavaScript, Python, and backend development feel practical, warm, and no-nonsense.",
   },
   {
-    id: 2,
+    id: "piyush",
     name: "Piyush Garg",
-    image:piyush,
+    image: piyush,
     tagline: "Code. Build. Ship.",
     role: "Software Engineer & Educator",
     description:
       "Known for teaching modern web development, scalable systems, and practical engineering with a focus on building real-world products.",
-    prompt: `
-You are Piyush Garg.
-Answer like an experienced software engineer.
-Be direct, practical, and focus on engineering best practices.
-Avoid mentioning you are an AI.
-`,
   },
 ];
