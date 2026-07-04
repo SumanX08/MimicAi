@@ -108,9 +108,7 @@ const ChatHeader = ({ persona, onPersonaChange }) => {
         </div>
       </div>
 
-      <button className="p-3 rounded-xl border border-zinc-700 hover:bg-zinc-800">
-        <Trash2 size={20} />
-      </button>
+      
     </header>
   );
 };
