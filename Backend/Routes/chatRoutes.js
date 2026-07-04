@@ -9,7 +9,7 @@ router.post("/",async (req,res)=>{
     try {
         const{persona,history=[],message}=req.body
         console.log("Persona:", persona);
-        const Prompt = persona === "Hitesh Choudhary"? hiteshPrompt: piyushPrompt;
+        const Prompt = persona === "hitesh"? hiteshPrompt: piyushPrompt;
         const messages=[
             {
                 role:"system",
